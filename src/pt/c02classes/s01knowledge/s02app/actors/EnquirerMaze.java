@@ -16,27 +16,41 @@ public class EnquirerMaze implements IEnquirer {
 	public boolean discover() {
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.print("(P)ergunta, (M)ovimento ou (F)im? ");
-		String tipo = scanner.nextLine();
+		String tipo = "P";
+		String[] direction = {"norte", "leste", "oeste", "sul"};
+		int i =0;
+		
 		while (!tipo.equalsIgnoreCase("F")) {
-		   System.out.print("  --> ");
-		   String pc = scanner.nextLine();
+
 		   switch (tipo.toUpperCase()) {
-		      case "P": String resposta = responder.ask(pc);
-		                System.out.println("  Resposta: " + resposta);
+		      case "P": String resposta = responder.ask(direction[i]);
+		                if(resposta.equalsIgnoreCase("passagem"))
+		                	tipo = "M";
+		                else{
+			                if(resposta.equalsIgnoreCase("saida"))
+			                	tipo = "F";
+			                else{
+			                	i++;
+		                		tipo = "P";
+			                }
+		                }
 		                break;
-		      case "M": boolean moveu = responder.move(pc);
-		                System.out.println((moveu)?"  Movimento executado!":"Não é possível mover");
+		      case "M": boolean moveu = responder.move(direction[i]);
+		                System.out.println((moveu)?"  Movimento executado!":"NÃ£o Ã© possÃ­vel mover");
+		                
+		                i=0;
+		                tipo = "P";
 		                break;
 		   }
-			System.out.print("(P)ergunta, (M)ovimento ou (F)im? ");
-			tipo = scanner.nextLine();
 		}
 		
+		boolean moveu = responder.move(direction[i]);
+        System.out.println((moveu)?"  Movimento executado!":"NÃ£o Ã© possÃ­vel mover");
+        
 		if (responder.finalAnswer("cheguei"))
-			System.out.println("Você encontrou a saida!");
+			System.out.println("VocÃª encontrou a saida!");
 		else
-			System.out.println("Fuém fuém fuém!");
+			System.out.println("FuÃ©m fuÃ©m fuÃ©m!");
 		
 		scanner.close();
 		
